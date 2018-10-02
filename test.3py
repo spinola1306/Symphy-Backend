@@ -1,0 +1,104 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+"""
+
+SYMPHY 2.0
+
+https://stackoverflow.com/questions/10747974/how-to-check-if-the-current-time-is-in-range-in-python
+
+"""
+
+#std
+import datetime
+import time
+
+
+def time_in_range(start, end, x):
+	#
+	#Prüft auf Zeit innerhalb Start Ende Intervall 
+	#Rückgabe Zeit bis zum nächsten Wechsel
+	#https://stackoverflow.com/questions/10747974/how-to-check-if-the-current-time-is-in-range-in-python
+	#
+	#in:
+	#   start datetime.time		intevall Startzeit
+	#   end   datetime.time		intervall Endzeit
+	#   x     datetime.time 	zu prüfende Zeit
+	#
+	#out:
+	#	res bool  				true wenn innerhalt des Intervalls
+	#	d   datetime.time		Zeit bis zum nächsten wechsel
+	#
+	today = datetime.date.today()
+	start = datetime.datetime.combine(today, start)
+	end = datetime.datetime.combine(today, end)
+	x = datetime.datetime.combine(today, x)
+	end2=end 
+	x2=x
+	if end <= start:
+		end += datetime.timedelta(1) # morgen
+	if x <= start:
+		x += datetime.timedelta(1)   # morgen
+	res = start <= x <= end			 #intervallprüfung
+	#restlaufzeit
+	if res: 							#innerhalt des intervalls
+		d=end-x
+	else:								#außerhalb des intervalls
+		if x2 >= start:					
+			start += datetime.timedelta(1) # tomorrow!
+			d=start-x2
+		else:
+			d=start-x2
+	return res,d 
+
+	
+
+start=datetime.time(23,0,00)
+end=datetime.time(2,0,00)
+x=datetime.time(1,30,0)
+print("ist:   %s\nstart: %s\nende:  %s\n" % (x,start,end) )
+	
+res,nx=time_in_range(start, end, x)
+print (res,nx)
+
+
+
+import threading	#https://docs.python.org/2/library/threading.html#timer-objects
+
+
+	
+def cron_20():
+	global t1
+	t1 = threading.Timer(cron_10, )		
+	t1.start() 
+	print("Hello, World! 20 Sekunden")
+
+	
+def cron_30():
+	threading.Timer(30.0, cron_30).start() # called every minute
+	print("Hello, World! 30 Sekunden")
+
+def cron_60():
+	threading.Timer(60.0, cron_60).start() # called every minute
+	print("Hello, World! 60 Sekunden")
+	
+	
+	
+def cron_5():
+	threading.Timer(5.0, cron_5).start() # 5 Sekunden cron neu starten
+	print("Hello, World! 5 Sekunden")	
+
+
+	
+#cron job starten	
+threading.Timer(5.0, cron_5).start() # 5 Sekunden cron starten
+print ('5 Sekunden cron gestartet')
+
+
+
+
+
+
+
+
+
